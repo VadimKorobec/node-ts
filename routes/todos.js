@@ -1,23 +1,29 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const express_1 = require("express");
 let todos = [];
-const router = express_1.default.Router();
-router.get("/", (req, res, next) => {
+const router = (0, express_1.Router)();
+router.get("/todos", (req, res, next) => {
     res.status(200).json({ todos: todos });
 });
-router.post("/todo", (req, res, next) => {
+router.get("/todos/:id", (req, res, next) => {
+    const { id } = req.params;
+    const todo = todos.find((item) => item.id === id);
+    if (!todo) {
+        return res.status(404).json({ message: 'Sorry we dont have this todo with that id!' });
+    }
+    res.status(200).json({ todo });
+});
+router.post("/todos", (req, res, next) => {
+    const { text } = req.body;
     const newTodo = {
         id: new Date().toISOString(),
-        text: "first todo",
+        text,
     };
     todos.push(newTodo);
-    res.status(201).json({ message: "Added Todo", todo: newTodo, todos: todos });
+    res.status(201).json({ message: "Added Todo", todos: todos });
 });
-router.put("/todo/:id", (req, res, next) => {
+router.put("/todos/:id", (req, res, next) => {
     const { id } = req.params;
     const { text } = req.body;
     const todo = todos.find((item) => item.id === id);
@@ -32,7 +38,7 @@ router.put("/todo/:id", (req, res, next) => {
     todo.text = text;
     return res.status(200).json({ message: "Updaded todo", todos: todos });
 });
-router.delete("/todo/:id", (req, res, next) => {
+router.delete("/todos/:id", (req, res, next) => {
     const { id } = req.params;
     const todo = todos.find((item) => item.id === id);
     if (!todo) {

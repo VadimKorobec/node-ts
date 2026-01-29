@@ -1,12 +1,23 @@
-import express, { Request, Response } from "express";
+import { Request, Response, Router } from "express";
 import { Todo } from "../models/todo";
 
 let todos: Todo[] = [];
 
-const router = express.Router();
+const router = Router();
 
-router.get("/", (req: Request, res: Response, next) => {
+router.get("/todos", (req: Request, res: Response, next) => {
   res.status(200).json({ todos: todos });
+});
+
+router.get("/todos/:id", (req: Request, res: Response, next) => {
+  const { id } = req.params;
+  const todo = todos.find((item) => item.id === id);
+
+  if (!todo) {
+    return res.status(404).json({message:'Sorry we dont have this todo with that id!'})
+  }
+
+  res.status(200).json({todo})
 });
 
 router.post("/todos", (req: Request, res: Response, next) => {

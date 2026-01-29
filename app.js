@@ -7,5 +7,7 @@ const express_1 = __importDefault(require("express"));
 const todos_1 = __importDefault(require("./routes/todos"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use("/todos", todos_1.default);
-app.listen({ port: 3000 });
+app.use("/api", todos_1.default);
+app.listen(3000, () => {
+    console.log("Example app listining on port 3000!");
+});
